@@ -1,6 +1,6 @@
 // 1. INICIALIZAR EL MAPA
 // Centrado en RD
-var map = L.map('map').setView([19.02, -70.41], 8);  
+var map = L.map('map').setView([19.02, -70.41], 9);  
 
 // 2. CAPA BASE (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -53,12 +53,12 @@ const estiloCauce = {
 
 // 5. EJECUTAR CARGA DE ARCHIVOS
 // Asegúrate de que los nombres de archivo coincidan exactamente con GitHub
-cargarGeoJSONCorregido('cuencaOZAMA.geojson', estiloCuenca, 'Cuenca del Río Ozama');
-cargarGeoJSONCorregido('cauceOZAMA.geojson', estiloCauce, 'Cauce del Río Ozama');
-cargarGeoJSONCorregido('cuencaYUMA.geojson', estiloCuenca, 'Cuenca del Río Ozama');
-cargarGeoJSONCorregido('cauceYUMA.geojson', estiloCauce, 'Cauce del Río Ozama');
-cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del Río Ozama');
-cargarGeoJSONCorregido('cauceMAIMONESTE.geojson', estiloCauce, 'Cauce del Río Ozama');
+cargarGeoJSONCorregido('cuencaOZAMA.geojson', estiloCuenca, 'Cuenca del río Ozama');
+cargarGeoJSONCorregido('cauceOZAMA.geojson', estiloCauce, 'Cauce del río Ozama');
+cargarGeoJSONCorregido('cuencaYUMA.geojson', estiloCuenca, 'Cuenca del río Yuma');
+cargarGeoJSONCorregido('cauceYUMA.geojson', estiloCauce, 'Cauce del río Yuma');
+cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del río Maimón del Este');
+cargarGeoJSONCorregido('cauceMAIMONESTE.geojson', estiloCauce, 'Cauce del río Maimón del Este');
 
 // 6. MARCADORES ADICIONALES (Opcional - Ejemplo de puntos manuales)
 // Estos ya usan [Lat, Lng] por defecto en Leaflet
