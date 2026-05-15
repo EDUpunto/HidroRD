@@ -59,11 +59,11 @@ cargarGeoJSONCorregido('cuencaYUMA.geojson', estiloCuenca, 'Cuenca del río Yuma
 cargarGeoJSONCorregido('cauceYUMA.geojson', estiloCauce, 'Cauce del río Yuma');
 cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del río Maimón del Este');
 cargarGeoJSONCorregido('cauceMAIMONESTE.geojson', estiloCauce, 'Cauce del río Maimón del Este');
+
 cargarGeoJSONCorregido('cuencaYUNA.geojson', estiloCuenca, 'Cuenca del río Yuna');
 cargarGeoJSONCorregido('cauceYUNA.geojson', estiloCauce, 'Cauce del río Yuna');
 cargarGeoJSONCorregido('cuencaYNORTE.geojson', estiloCuenca, 'Cuenca del río Yaque del Norte');
 cargarGeoJSONCorregido('cauceYNORTE.geojson', estiloCauce, 'Cauce del río Yaque del Norte');
-
 cargarGeoJSONCorregido('cuencaBACUI.geojson', estiloCuenca, 'Cuenca del río Bacuí');
 cargarGeoJSONCorregido('cauceBACUI.geojson', estiloCauce, 'Cauce del río Bacuí');
 cargarGeoJSONCorregido('cuencaBAJABONICO.geojson', estiloCuenca, 'Cuenca del río Bajabonico');
