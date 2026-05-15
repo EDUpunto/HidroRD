@@ -55,10 +55,29 @@ const estiloCauce = {
 // Asegúrate de que los nombres de archivo coincidan exactamente con GitHub
 cargarGeoJSONCorregido('cuencaOZAMA.geojson', estiloCuenca, 'Cuenca del río Ozama');
 cargarGeoJSONCorregido('cauceOZAMA.geojson', estiloCauce, 'Cauce del río Ozama');
+
 cargarGeoJSONCorregido('cuencaYUMA.geojson', estiloCuenca, 'Cuenca del río Yuma');
 cargarGeoJSONCorregido('cauceYUMA.geojson', estiloCauce, 'Cauce del río Yuma');
 cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del río Maimón del Este');
 cargarGeoJSONCorregido('cauceMAIMONESTE.geojson', estiloCauce, 'Cauce del río Maimón del Este');
+cargarGeoJSONCorregido('cuencaTOSA.geojson', estiloCuenca, 'Cuenca del río Tosa o Brujuelas');
+cargarGeoJSONCorregido('cauceTOSA.geojson', estiloCauce, 'Cauce del río Tosa o Brujuelas');
+cargarGeoJSONCorregido('cuencaHIGUAMO.geojson', estiloCuenca, 'Cuenca del río Higuamo');
+cargarGeoJSONCorregido('cauceHIGUAMO.geojson', estiloCauce, 'Cauce del río Higuamo');
+cargarGeoJSONCorregido('cuencaSOCO.geojson', estiloCuenca, 'Cuenca del río Soco');
+cargarGeoJSONCorregido('cauceSOCO.geojson', estiloCauce, 'Cauce del río Soco');
+cargarGeoJSONCorregido('cuencaCUMAYASA.geojson', estiloCuenca, 'Cuenca del río Cumayasa');
+cargarGeoJSONCorregido('cauceCUMAYASA.geojson', estiloCauce, 'Cauce del río Cumayasa');
+cargarGeoJSONCorregido('cuencaSALADO.geojson', estiloCuenca, 'Cuenca del río Romana, Dulse o Salado');
+cargarGeoJSONCorregido('cauceSALADO.geojson', estiloCauce, 'Cauce del río Romana, Dulse o Salado');
+cargarGeoJSONCorregido('cuencaCHAVON.geojson', estiloCuenca, 'Cuenca del río Chavón');
+cargarGeoJSONCorregido('cauceCHAVON.geojson', estiloCauce, 'Cauce del río Chavón');
+cargarGeoJSONCorregido('cuencaYABON.geojson', estiloCuenca, 'Cuenca del río Yabón');
+cargarGeoJSONCorregido('cauceYABON.geojson', estiloCauce, 'Cauce del río Yabón');
+cargarGeoJSONCorregido('cuencaMAGUA.geojson', estiloCuenca, 'Cuenca del río Maguá');
+cargarGeoJSONCorregido('cauceMAGUA.geojson', estiloCauce, 'Cauce del río Maguá');
+cargarGeoJSONCorregido('cuencaCUARON.geojson', estiloCuenca, 'Cuenca del río Cuarón');
+cargarGeoJSONCorregido('cauceCUARON.geojson', estiloCauce, 'Cauce del río Cuarón');
 
 cargarGeoJSONCorregido('cuencaYUNA.geojson', estiloCuenca, 'Cuenca del río Yuna');
 cargarGeoJSONCorregido('cauceYUNA.geojson', estiloCauce, 'Cauce del río Yuna');
