@@ -133,6 +133,9 @@ cargarGeoJSONCorregido('caucePEDERNALES.json', estiloCauce, 'Cauce del río Pede
 cargarGeoJSONCorregido('cuencaVIA.json', estiloCuenca, 'Cuenca del río Vía');
 cargarGeoJSONCorregido('cauceVIA.json', estiloCauce, 'Cauce del río Vía');
 
+cargarGeoJSONCorregido('cuencaARTIBONITO.json', estiloCuenca, 'Cuenca del río Artibonito');
+cargarGeoJSONCorregido('cauceARTIBONITO.json', estiloCauce, 'Cauce del río Artibonito');
+
 // 6. MARCADORES ADICIONALES (Opcional - Ejemplo de puntos manuales)
 // Estos ya usan [Lat, Lng] por defecto en Leaflet
 //var marcadorDesembocadura = L.marker([18.48, -69.88]).addTo(map);
