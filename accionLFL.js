@@ -58,11 +58,11 @@ cargarGeoJSONCorregido('cauceOZAMA.geojson', estiloCauce, 'Cauce del río Ozama'
 cargarGeoJSONCorregido('cuencaYUMA.geojson', estiloCuenca, 'Cuenca del río Yuma');
 cargarGeoJSONCorregido('cauceYUMA.geojson', estiloCauce, 'Cauce del río Yuma');
 cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del río Maimón del Este');
-cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del río Maimón del Este');
+cargarGeoJSONCorregido('cauceMAIMONESTE.geojson', estiloCauce, 'Cauce del río Maimón del Este');
 cargarGeoJSONCorregido('cauceYUNA.geojson', estiloCauce, 'Cauce del río Yuna');
-cargarGeoJSONCorregido('cuencaYUNA.geojson', estiloCauce, 'Cauce del río Yuna');
+cargarGeoJSONCorregido('cuencaYUNA.geojson', estiloCuenca, 'Cuenca del río Yuna');
 cargarGeoJSONCorregido('cauceYNORTE.geojson', estiloCauce, 'Cauce del río Yaque del Norte');
-cargarGeoJSONCorregido('cuencaYNORTE.geojson', estiloCauce, 'Cuenca del río Yaque del Norte');
+cargarGeoJSONCorregido('cuencaYNORTE.geojson', estiloCuenca, 'Cuenca del río Yaque del Norte');
 
 // 6. MARCADORES ADICIONALES (Opcional - Ejemplo de puntos manuales)
 // Estos ya usan [Lat, Lng] por defecto en Leaflet
