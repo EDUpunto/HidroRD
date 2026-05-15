@@ -82,7 +82,8 @@ cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del rí
 cargarGeoJSONCorregido('cauceSJUANCIBAO.geojson', estiloCauce, 'Cauce del río San Juan Cibao');
 cargarGeoJSONCorregido('cuencaYASICA.geojson', estiloCuenca, 'Cuenca del río Yásica');
 cargarGeoJSONCorregido('cauceYASICA.geojson', estiloCauce, 'Cauce del río Yásica');
-
+cargarGeoJSONCorregido('cuencaCAMU.json', estiloCuenca, 'Cuenca del río Camú');
+cargarGeoJSONCorregido('cauceCAMU.json', estiloCauce, 'Cauce del río Camú');
 
 // 6. MARCADORES ADICIONALES (Opcional - Ejemplo de puntos manuales)
 // Estos ya usan [Lat, Lng] por defecto en Leaflet
