@@ -64,6 +64,25 @@ cargarGeoJSONCorregido('cauceYUNA.geojson', estiloCauce, 'Cauce del río Yuna');
 cargarGeoJSONCorregido('cuencaYNORTE.geojson', estiloCuenca, 'Cuenca del río Yaque del Norte');
 cargarGeoJSONCorregido('cauceYNORTE.geojson', estiloCauce, 'Cauce del río Yaque del Norte');
 
+cargarGeoJSONCorregido('cuencaBACUI.geojson', estiloCuenca, 'Cuenca del río Bacuí');
+cargarGeoJSONCorregido('cauceBACUI.geojson', estiloCauce, 'Cauce del río Bacuí');
+cargarGeoJSONCorregido('cuencaBAJABONICO.geojson', estiloCuenca, 'Cuenca del río Bajabonico');
+cargarGeoJSONCorregido('cauceBAJABONICO.geojson', estiloCauce, 'Cauce del río Bajabonico');
+cargarGeoJSONCorregido('cuencaBOBA.geojson', estiloCuenca, 'Cuenca del río Boba');
+cargarGeoJSONCorregido('cauceBOBA.geojson', estiloCauce, 'Cauce del río Boba');
+cargarGeoJSONCorregido('cuencaELLIMON.geojson', estiloCuenca, 'Cuenca del río El Limón');
+cargarGeoJSONCorregido('cauceELLIMON.geojson', estiloCauce, 'Cauce del río El Limón');
+cargarGeoJSONCorregido('cuencaJOBA.geojson', estiloCuenca, 'Cuenca del río Joba');
+cargarGeoJSONCorregido('cauceJOBA.geojson', estiloCauce, 'Cauce del río Joba');
+cargarGeoJSONCorregido('cuencaMAINONCIBAO.geojson', estiloCuenca, 'Cuenca del río Maimón Cibao');
+cargarGeoJSONCorregido('cauceMAINONCIBAO.geojson', estiloCauce, 'Cauce del río Maimón Cibao');
+cargarGeoJSONCorregido('cuencaNAGUA.geojson', estiloCuenca, 'Cuenca del río Nagua');
+cargarGeoJSONCorregido('cauceNAGUA.geojson', estiloCauce, 'Cauce del río Nagua');
+cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del río San Juan Cibao');
+cargarGeoJSONCorregido('cauceSJUANCIBAO.geojson', estiloCauce, 'Cauce del río San Juan Cibao');
+cargarGeoJSONCorregido('cuencaYASICA.geojson', estiloCuenca, 'Cuenca del río Yásica');
+cargarGeoJSONCorregido('cauceYASICA.geojson', estiloCauce, 'Cauce del río Yásica');
+
 
 // 6. MARCADORES ADICIONALES (Opcional - Ejemplo de puntos manuales)
 // Estos ya usan [Lat, Lng] por defecto en Leaflet
