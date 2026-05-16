@@ -1,6 +1,6 @@
 // 1. INICIALIZAR EL MAPA
 // Centrado en RD
-var map = L.map('map').setView([19.02, -70.41], 10);  
+var map = L.map('map').setView([19.02, -70.41], 8);  
 
 // 2. CAPA BASE (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
