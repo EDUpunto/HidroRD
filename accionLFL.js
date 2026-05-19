@@ -111,6 +111,8 @@ cargarGeoJSONCorregido('cuencaCAMU.json', estiloCuenca, 'Cuenca del río Camú')
 cargarGeoJSONCorregido('cauceCAMU.json', estiloCauce, 'Cauce del río Camú');
 cargarGeoJSONCorregido('cuencaMASACRE.json', estiloCuenca, 'Cuenca del río Dajabón o Masacre');
 cargarGeoJSONCorregido('cauceMASACRE.json', estiloCauce, 'Cauce del río Dajabón o Masacre');
+cargarGeoJSONCorregido('cuencaCHACUEY.json', estiloCuenca, 'Cuenca del río Chacuey');
+cargarGeoJSONCorregido('cauceCHACUEY.json', estiloCauce, 'Cauce del río Chacuey');
 
 cargarGeoJSONCorregido('cuencaHAINA.json', estiloCuenca, 'Cuenca del río Haina');
 cargarGeoJSONCorregido('cauceHAINA.json', estiloCauce, 'Cauce del río Haina');
