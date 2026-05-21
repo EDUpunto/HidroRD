@@ -62,8 +62,8 @@ cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del rí
 cargarGeoJSONCorregido('cauceMAIMONESTE.geojson', estiloCauce, 'Cauce del río Maimón del Este');
 cargarGeoJSONCorregido('cuencaANAMUYA.json', estiloCuenca, 'Cuenca del río Anamuya');
 cargarGeoJSONCorregido('cauceANAMUYA.json', estiloCauce, 'Cauce del río Anamuya');
-cargarGeoJSONCorregido('cuencaTOSA.json', estiloCuenca, 'Cuenca del río Tosa o Brujuelas');
-cargarGeoJSONCorregido('cauceTOSA.json', estiloCauce, 'Cauce del río Tosa o Brujuelas');
+cargarGeoJSONCorregido('cuencaBRUJUELAS.json', estiloCuenca, 'Cuenca del río Brujuelas o Tosa');
+cargarGeoJSONCorregido('cauceBRUJUELAS.json', estiloCauce, 'Cauce del río Brujuelas o Tosa');
 cargarGeoJSONCorregido('cuencaHIGUAMO.json', estiloCuenca, 'Cuenca del río Higuamo');
 cargarGeoJSONCorregido('cauceHIGUAMO.json', estiloCauce, 'Cauce del río Higuamo');
 cargarGeoJSONCorregido('cuencaSOCO.json', estiloCuenca, 'Cuenca del río Soco');
