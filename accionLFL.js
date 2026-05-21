@@ -101,8 +101,8 @@ cargarGeoJSONCorregido('cuencaJOBA.geojson', estiloCuenca, 'Cuenca del río Joba
 cargarGeoJSONCorregido('cauceJOBA.geojson', estiloCauce, 'Cauce del río Joba');
 cargarGeoJSONCorregido('cuencaMAIMONCIBAO.geojson', estiloCuenca, 'Cuenca del río Maimón del norte');
 cargarGeoJSONCorregido('cauceMAIMONCIBAO.geojson', estiloCauce, 'Cauce del río Maimón del norte');
-cargarGeoJSONCorregido('cuencaSMARCOS.geojson', estiloCuenca, 'Cuenca del río San Marcos');
-cargarGeoJSONCorregido('cauceSMARCOS.geojson', estiloCauce, 'Cauce del río San Marcos');
+cargarGeoJSONCorregido('cuencaSMARCOS.json', estiloCuenca, 'Cuenca del río San Marcos');
+cargarGeoJSONCorregido('cauceSMARCOS.json', estiloCauce, 'Cauce del río San Marcos');
 cargarGeoJSONCorregido('cuencaNAGUA.geojson', estiloCuenca, 'Cuenca del río Nagua');
 cargarGeoJSONCorregido('cauceNAGUA.geojson', estiloCauce, 'Cauce del río Nagua');
 cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del río San Juan del Cibao');
