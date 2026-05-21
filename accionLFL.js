@@ -80,8 +80,8 @@ cargarGeoJSONCorregido('cuencaMAGUA.json', estiloCuenca, 'Cuenca del río Maguá
 cargarGeoJSONCorregido('cauceMAGUA.json', estiloCauce, 'Cauce del río Maguá');
 cargarGeoJSONCorregido('cuencaCUARON.json', estiloCuenca, 'Cuenca del río Cuarón');
 cargarGeoJSONCorregido('cauceCUARON.json', estiloCauce, 'Cauce del río Cuarón');
-cargarGeoJSONCorregido('cuencaJOVERO.json', estiloCuenca, 'Cuenca del río Jobero');
-cargarGeoJSONCorregido('cauceJOVERO.json', estiloCauce, 'Cauce del río Jobero');
+cargarGeoJSONCorregido('cuencaJOVERO.json', estiloCuenca, 'Cuenca del río Jovero');
+cargarGeoJSONCorregido('cauceJOVERO.json', estiloCauce, 'Cauce del río Jovero');
 cargarGeoJSONCorregido('cuencaYEGUADA.json', estiloCuenca, 'Cuenca del río Yeguada');
 cargarGeoJSONCorregido('cauceYEGUADA.json', estiloCauce, 'Cauce del río Yeguada');
 
