@@ -103,8 +103,8 @@ cargarGeoJSONCorregido('cuencaMAIMONCIBAO.geojson', estiloCuenca, 'Cuenca del r�
 cargarGeoJSONCorregido('cauceMAIMONCIBAO.geojson', estiloCauce, 'Cauce del río Maimón Cibao');
 cargarGeoJSONCorregido('cuencaNAGUA.geojson', estiloCuenca, 'Cuenca del río Nagua');
 cargarGeoJSONCorregido('cauceNAGUA.geojson', estiloCauce, 'Cauce del río Nagua');
-cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del río San Juan Cibao');
-cargarGeoJSONCorregido('cauceSJUANCIBAO.geojson', estiloCauce, 'Cauce del río San Juan Cibao');
+cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del río San Juan del Cibao');
+cargarGeoJSONCorregido('cauceSJUANCIBAO.geojson', estiloCauce, 'Cauce del río San Juan del Cibao');
 cargarGeoJSONCorregido('cuencaYASICA.geojson', estiloCuenca, 'Cuenca del río Yásica');
 cargarGeoJSONCorregido('cauceYASICA.geojson', estiloCauce, 'Cauce del río Yásica');
 cargarGeoJSONCorregido('cuencaCAMU.json', estiloCuenca, 'Cuenca del río Camú');
