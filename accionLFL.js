@@ -107,8 +107,8 @@ cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del rí
 cargarGeoJSONCorregido('cauceSJUANCIBAO.geojson', estiloCauce, 'Cauce del río San Juan del Cibao');
 cargarGeoJSONCorregido('cuencaYASICA.geojson', estiloCuenca, 'Cuenca del río Yásica');
 cargarGeoJSONCorregido('cauceYASICA.geojson', estiloCauce, 'Cauce del río Yásica');
-cargarGeoJSONCorregido('cuencaCAMU.json', estiloCuenca, 'Cuenca del río Camú');
-cargarGeoJSONCorregido('cauceCAMU.json', estiloCauce, 'Cauce del río Camú');
+cargarGeoJSONCorregido('cuencaCAMU.json', estiloCuenca, 'Cuenca del río Camú del norte');
+cargarGeoJSONCorregido('cauceCAMU.json', estiloCauce, 'Cauce del río Camú del norte');
 cargarGeoJSONCorregido('cuencaMASACRE.json', estiloCuenca, 'Cuenca del río Dajabón o Masacre');
 cargarGeoJSONCorregido('cauceMASACRE.json', estiloCauce, 'Cauce del río Dajabón o Masacre');
 cargarGeoJSONCorregido('cuencaCHACUEY.json', estiloCuenca, 'Cuenca del río Chacuey');
