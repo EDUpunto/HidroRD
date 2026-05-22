@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Hidrografía RD</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+            background: #1a2635;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* ── VARIABLES NUEVO TEMA ── */
+        :root {
+            --fondo-paneles: #242321;
+            --borde-paneles: #403e3a;
+            --texto-principal: #f0f4f8;
+            --texto-secundario: #a0aec0;
+            --color-cauce: #2980b9;
+            --color-cuenca: #2ecc71;
+            --color-resalte: #4fa3d1;
+        }
+
+        /* ── HEADER / TÍTULO (Sin botones) ── */
+        .header-panel {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: var(--fondo-paneles);
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 1px solid var(--borde-paneles);
+            text-align: center;
+            min-width: 240px;
+        }
+
+        .header-panel h1 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--texto-principal);
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .header-panel .subtitle {
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+            margin-top: 3px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── BOTONES INFERIOR IZQUIERDA ── */
+        .bottom-left-controls {
+            position: absolute;
+            bottom: 40px; /* Sobre la escala */
+            left: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            max-width: 200px;
+        }
+
+        .btn-discrete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background: var(--fondo-paneles);
+            color: var(--texto-principal);
+            border: 1px solid var(--borde-paneles);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .btn-discrete:hover {
+            background: #353330;
+            border-color: #5a5752;
+        }
+
+        /* ── PANEL DERECHO (Vistas + Leyenda siempre visible) ── */
+        .right-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 14px;
+            z-index: 1000;
+            background: var(--fondo-paneles);
+            border: 1px solid var(--borde-paneles);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            padding: 14px 16px;
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--texto-secundario);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--borde-paneles);
+            padding-bottom: 4px;
+        }
+
+        /* Switcher Vistas */
+        .view-switcher-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .view-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Source Sans 3', sans-serif;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .view-btn.active {
+            background: #353330;
+            color: var(--texto-principal);
+            border-color: #5a5752;
+        }
+
+        .view-btn:not(.active) {
+            background: transparent;
+            color: var(--texto-secundario);
+            border-color: var(--borde-paneles);
+        }
+
+        .view-btn:hover:not(.active) {
+            background: #2c2b29;
+            color: var(--texto-principal);
+        }
+
+        /* Simbología */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            color: var(--texto-principal);
+        }
+        .legend-item:last-child { margin-bottom: 0; }
+
+        .legend-swatch-fill {
+            width: 24px;
+            height: 14px;
+            border-radius: 3px;
+            border: 2px solid rgba(46, 204, 113, 0.8);
+            background: rgba(46, 204, 113, 0.3);
+            flex-shrink: 0;
+        }
+
+        .legend-swatch-line {
+            width: 24px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--color-cauce);
+            flex-shrink: 0;
+        }
+
+        /* ── PANEL DE CUENCA SELECCIONADA ── */
+        .info-panel {
+            position: absolute;
+            bottom: 100px; /* Por encima de los botones inferiores */
+            left: 10px;
+            z-index: 1000;
+            background: var(--fondo-paneles);
+            border: 1px solid var(--borde-paneles);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            padding: 12px 16px;
+            min-width: 200px;
+            max-width: 240px;
+            display: none;
+            border-left: 4px solid var(--color-resalte);
+        }
+
+        .info-panel.visible {
+            display: block;
+        }
+
+        .info-panel .info-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--texto-secundario);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .info-panel .info-name {
+            font-family: 'Merriweather', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--texto-principal);
+            line-height: 1.3;
+        }
+
+        .info-panel .info-reset {
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: var(--color-resalte);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: #2c2b29;
+            border-radius: 6px;
+            border: 1px solid var(--borde-paneles);
+            transition: background 0.2s;
+        }
+        .info-panel .info-reset:hover { 
+            background: #353330;
+        }
+
+        /* ── MODIFICACIONES CSS NATIVO LEAFLET (#242321) ── */
+        
+        /* Botones Zoom */
+        .leaflet-bar a, .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+            background-color: var(--fondo-paneles) !important;
+            color: var(--texto-principal) !important;
+            border-color: var(--borde-paneles) !important;
+        }
+        .leaflet-bar a:hover {
+            background-color: #353330 !important;
+        }
+
+        /* Escala */
+        .leaflet-control-scale-line {
+            font-family: 'Source Sans 3', sans-serif !important;
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+            background: var(--fondo-paneles) !important;
+            color: var(--texto-principal) !important;
+            border: 2px solid var(--borde-paneles) !important;
+            border-top: none !important;
+            padding: 2px 6px !important;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+        }
+
+        /* Atribución */
+        .leaflet-control-attribution {
+            background: rgba(36, 35, 33, 0.8) !important;
+            color: var(--texto-secundario) !important;
+        }
+        .leaflet-control-attribution a {
+            color: var(--texto-principal) !important;
+        }
+
+        /* Ajustes Móviles */
+        @media (max-width: 540px) {
+            .header-panel { top: 10px; padding: 10px 16px; }
+            .header-panel h1 { font-size: 0.95rem; }
+            .right-panel { width: 150px; bottom: 10px; right: 8px; padding: 10px; }
+            .bottom-left-controls { bottom: 35px; left: 8px; }
+            .info-panel { bottom: 95px; left: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER (Sin botones) -->
+<div class="header-panel">
+    <h1>🗺️ Hidrografía de RD</h1>
+    <div class="subtitle">🏞️ Cuencas y ríos superficiales</div>
+</div>
+
+<!-- INFO PANEL (Cuenca seleccionada) -->
+<div class="info-panel" id="infoPanel">
+    <div class="info-label">✨ Cuenca seleccionada</div>
+    <div class="info-name" id="infoName">—</div>
+    <div class="info-reset" onclick="resetSeleccion()">✕ Mostrar todas</div>
+</div>
+
+<!-- BOTONES DISCRETOS (Inferior Izquierda) -->
+<div class="bottom-left-controls">
+    <a class="btn-discrete" href="https://edupunto.com/2022/01/rios-importantes-de-dominicana/" target="_blank">🌐 EDUpunto</a>
+    <a class="btn-discrete" href="https://drive.google.com" target="_blank">🗒️ Imprimible</a>
+    <a class="btn-discrete" href="#" target="_blank">📖 Concepto</a>
+</div>
+
+<!-- MAPA -->
+<div id="map"></div>
+
+<!-- PANEL DERECHO: VISTAS Y LEYENDA -->
+<div class="right-panel">
+    
+    <!-- Sección Vistas -->
+    <div>
+        <div class="section-title">Vista Mapa</div>
+        <div class="view-switcher-vertical">
+            <button class="view-btn active" id="btn-dibujo" onclick="setView('dibujo')">
+                🗺️ Dibujo
+            </button>
+            <button class="view-btn" id="btn-satelite" onclick="setView('satelite')">
+                🛰️ Satélite
+            </button>
+        </div>
+    </div>
+
+    <!-- Sección Simbología -->
+    <div>
+        <div class="section-title">Simbología</div>
+        <div class="legend-item">
+            <div class="legend-swatch-fill"></div>
+            Área de Cuenca
+        </div>
+        <div class="legend-item">
+            <div class="legend-swatch-line"></div>
+            Cauce Principal
+        </div>
+    </div>
+
+</div>
+
+<!-- SCRIPTS: Leaflet y Lógica del Mapa -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // ─────────────────────────────────────────────
+    //  HIDROGRAFÍA RD — Lógica Integrada
+    // ─────────────────────────────────────────────
+
+    // 1. CAPAS BASE
+    var capaOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
+
+    var capaSatelite = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19,
+        attribution: '© <a href="https://www.esri.com">Esri</a> World Imagery'
+    });
+
+    // 2. INICIALIZAR MAPA
+    var map = L.map('map', {
+        center: [19.03556466237287, -70.89432006796727],
+        zoom: 8,
+        layers: [capaOSM],
+        zoomControl: true
+    });
+
+    // Escala ubicada en la esquina inferior izquierda
+    L.control.scale({
+        imperial: false,
+        position: 'bottomleft',
+        maxWidth: 120
+    }).addTo(map);
+
+    // 3. ESTADO GLOBAL
+    var todasLasCapas = [];
+    var cuencaSeleccionada = null;
+
+    // 4. ESTILOS
+    var estiloCuenca = {
+        color: "#27ae60",
+        weight: 1.5,
+        fillColor: "#2ecc71",
+        fillOpacity: 0.18,
+        opacity: 0.8
+    };
+
+    var estiloCauce = {
+        color: "#2980b9",
+        weight: 3.5,
+        opacity: 0.9,
+        lineCap: 'round'
+    };
+
+    var estiloOpacadoCuenca = {
+        color: "#27ae60",
+        weight: 1,
+        fillColor: "#2ecc71",
+        fillOpacity: 0.04,
+        opacity: 0.15
+    };
+
+    var estiloOpacadoCauce = {
+        color: "#2980b9",
+        weight: 1.5,
+        opacity: 0.12
+    };
+
+    var estiloResaltadoCuenca = {
+        color: "#1a8a40",
+        weight: 2.5,
+        fillColor: "#2ecc71",
+        fillOpacity: 0.45,
+        opacity: 1
+    };
+
+    var estiloResaltadoCauce = {
+        color: "#4fa3d1", // Ajustado para ser visible sobre fondos oscuros (satelite) y el mapa claro
+        weight: 5,
+        opacity: 1
+    };
+
+    // 5. LÓGICA DE SELECCIÓN
+    function seleccionarCuenca(nombre) {
+        cuencaSeleccionada = nombre;
+
+        todasLasCapas.forEach(function(grupo) {
+            var esSel = (grupo.nombre === nombre);
+
+            if (grupo.cuencaLayer) {
+                grupo.cuencaLayer.setStyle(esSel ? estiloResaltadoCuenca : estiloOpacadoCuenca);
+                if (esSel) grupo.cuencaLayer.bringToFront();
+            }
+            if (grupo.cauceLayer) {
+                grupo.cauceLayer.setStyle(esSel ? estiloResaltadoCauce : estiloOpacadoCauce);
+                if (esSel) grupo.cauceLayer.bringToFront();
+            }
+        });
+
+        // Actualizar panel de info
+        document.getElementById('infoName').textContent = nombre;
+        document.getElementById('infoPanel').classList.add('visible');
+    }
+
+    window.resetSeleccion = function() {
+        cuencaSeleccionada = null;
+        todasLasCapas.forEach(function(grupo) {
+            if (grupo.cuencaLayer) grupo.cuencaLayer.setStyle(estiloCuenca);
+            if (grupo.cauceLayer)  grupo.cauceLayer.setStyle(estiloCauce);
+        });
+        document.getElementById('infoPanel').classList.remove('visible');
+    };
+
+    // Click en el mapa fuera de polígonos
+    map.on('click', function(e) {
+        if (!e.originalEvent._fromLayer) window.resetSeleccion();
+    });
+
+    // 6. CARGAR GEOJSON
+    var grupos = {};
+
+    function obtenerNombreRio(nombreCapa) {
+        return nombreCapa.replace(/^(Cuenca|Cauce) del río /, '').trim();
+    }
+
+    function cargarGeoJSONCorregido(url, estilo, nombreCapa) {
+        var esCuenca = nombreCapa.startsWith('Cuenca');
+        var nombreRio = obtenerNombreRio(nombreCapa);
+
+        if (!grupos[nombreRio]) grupos[nombreRio] = { nombre: nombreRio, cuencaLayer: null, cauceLayer: null };
+
+        fetch(url)
+            .then(function(response) {
+                if (!response.ok) throw new Error('Error al cargar ' + url);
+                return response.json();
+            })
+            .then(function(data) {
+                var layer = L.geoJSON(data, {
+                    coordsToLatLng: function(coords) {
+                        return new L.LatLng(coords[1], coords[0]);
+                    },
+                    style: estilo,
+                    onEachFeature: function(feature, featureLayer) {
+                        featureLayer.on('click', function(e) {
+                            e.originalEvent._fromLayer = true;
+                            seleccionarCuenca(nombreRio);
+                        });
+                        featureLayer.on('mouseover', function() {
+                            if (!cuencaSeleccionada) {
+                                featureLayer.setStyle(
+                                    esCuenca ? { fillOpacity: 0.38, weight: 2.5 }
+                                             : { opacity: 1, weight: 5, color: '#4fa3d1' }
+                                );
+                            }
+                        });
+                        featureLayer.on('mouseout', function() {
+                            if (!cuencaSeleccionada) {
+                                featureLayer.setStyle(estilo);
+                            }
+                        });
+                        
+                        var popupHTML = '<div style="background:#242321; color:#f0f4f8; padding:5px; margin:-14px -20px; border-radius:12px;">'
+                            + '<b style="font-family:\'Merriweather\',serif;color:#a0aec0;font-size:0.75rem;text-transform:uppercase;">'
+                            + (esCuenca ? 'Cuenca' : 'Cauce') + ' del río</b><br>'
+                            + '<span style="font-size:1.05rem;font-weight:600;color:#4fa3d1;">' + nombreRio + '</span>'
+                            + '</div>';
+                        
+                        // Override popup background to dark theme
+                        featureLayer.bindPopup(popupHTML, {
+                            maxWidth: 200,
+                            className: 'dark-popup'
+                        });
+                    }
+                }).addTo(map);
+
+                if (esCuenca) {
+                    grupos[nombreRio].cuencaLayer = layer;
+                } else {
+                    grupos[nombreRio].cauceLayer = layer;
+                }
+
+                todasLasCapas = Object.values(grupos);
+            })
+            .catch(function(error) { console.warn('Ignorando carga: ' + url); });
+    }
+
+    // Inyectar CSS extra para el Popup oscuro
+    var popupStyle = document.createElement('style');
+    popupStyle.innerHTML = `
+        .dark-popup .leaflet-popup-content-wrapper, .dark-popup .leaflet-popup-tip {
+            background: #242321 !important;
+            border: 1px solid #403e3a;
+        }
+        .dark-popup .leaflet-popup-close-button {
+            color: #f0f4f8 !important;
+        }
+    `;
+    document.head.appendChild(popupStyle);
+
+    // 7. SWITCHER VISTA
+    window.setView = function(tipo) {
+        if (tipo === 'satelite') {
+            map.removeLayer(capaOSM);
+            capaSatelite.addTo(map);
+            document.getElementById('btn-dibujo').classList.remove('active');
+            document.getElementById('btn-satelite').classList.add('active');
+        } else {
+            map.removeLayer(capaSatelite);
+            capaOSM.addTo(map);
+            document.getElementById('btn-satelite').classList.remove('active');
+            document.getElementById('btn-dibujo').classList.add('active');
+        }
+    };
+
+    // 8. CARGAR ARCHIVOS (Se mantienen las mismas rutas del código original)
+    cargarGeoJSONCorregido('cuencaOZAMA.geojson',    estiloCuenca, 'Cuenca del río Ozama');
+    cargarGeoJSONCorregido('cauceOZAMA.geojson',     estiloCauce,  'Cauce del río Ozama');
+    cargarGeoJSONCorregido('cuencaYUMA.geojson',     estiloCuenca, 'Cuenca del río Yuma');
+    cargarGeoJSONCorregido('cauceYUMA.geojson',      estiloCauce,  'Cauce del río Yuma');
+    cargarGeoJSONCorregido('cuencaMAIMONESTE.geojson', estiloCuenca, 'Cuenca del río Maimón del Este');
+    cargarGeoJSONCorregido('cauceMAIMONESTE.geojson',  estiloCauce,  'Cauce del río Maimón del Este');
+    cargarGeoJSONCorregido('cuencaANAMUYA.json',    estiloCuenca, 'Cuenca del río Anamuya');
+    cargarGeoJSONCorregido('cauceANAMUYA.json',     estiloCauce,  'Cauce del río Anamuya');
+    cargarGeoJSONCorregido('cuencaTOSA.json',       estiloCuenca, 'Cuenca del río Tosa o Brujuelas');
+    cargarGeoJSONCorregido('cauceTOSA.json',        estiloCauce,  'Cauce del río Tosa o Brujuelas');
+    cargarGeoJSONCorregido('cuencaHIGUAMO.json',    estiloCuenca, 'Cuenca del río Higuamo');
+    cargarGeoJSONCorregido('cauceHIGUAMO.json',     estiloCauce,  'Cauce del río Higuamo');
+    cargarGeoJSONCorregido('cuencaSOCO.json',       estiloCuenca, 'Cuenca del río Soco');
+    cargarGeoJSONCorregido('cauceSOCO.json',        estiloCauce,  'Cauce del río Soco');
+    cargarGeoJSONCorregido('cuencaCUMAYASA.json',   estiloCuenca, 'Cuenca del río Cumayasa');
+    cargarGeoJSONCorregido('cauceCUMAYASA.json',    estiloCauce,  'Cauce del río Cumayasa');
+    cargarGeoJSONCorregido('cuencaROMANA.json',     estiloCuenca, 'Cuenca del río Romana, Dulce o Salado');
+    cargarGeoJSONCorregido('cauceROMANA.json',      estiloCauce,  'Cauce del río Romana, Dulce o Salado');
+    cargarGeoJSONCorregido('cuencaCHAVON.json',     estiloCuenca, 'Cuenca del río Chavón');
+    cargarGeoJSONCorregido('cauceCHAVON.json',      estiloCauce,  'Cauce del río Chavón');
+    cargarGeoJSONCorregido('cuencaYABON.json',      estiloCuenca, 'Cuenca del río Yabón');
+    cargarGeoJSONCorregido('cauceYABON.json',       estiloCauce,  'Cauce del río Yabón');
+    cargarGeoJSONCorregido('cuencaMAGUA.json',      estiloCuenca, 'Cuenca del río Maguá');
+    cargarGeoJSONCorregido('cauceMAGUA.json',       estiloCauce,  'Cauce del río Maguá');
+    cargarGeoJSONCorregido('cuencaCUARON.json',     estiloCuenca, 'Cuenca del río Cuarón');
+    cargarGeoJSONCorregido('cauceCUARON.json',      estiloCauce,  'Cauce del río Cuarón');
+    cargarGeoJSONCorregido('cuencaJOBERO.json',     estiloCuenca, 'Cuenca del río Jobero');
+    cargarGeoJSONCorregido('cauceJOBERO.json',      estiloCauce,  'Cauce del río Jobero');
+    cargarGeoJSONCorregido('cuencaYEGUADA.json',    estiloCuenca, 'Cuenca del río Yeguada');
+    cargarGeoJSONCorregido('cauceYEGUADA.json',     estiloCauce,  'Cauce del río Yeguada');
+    cargarGeoJSONCorregido('cuencaYUNA.geojson',    estiloCuenca, 'Cuenca del río Yuna');
+    cargarGeoJSONCorregido('cauceYUNA.geojson',     estiloCauce,  'Cauce del río Yuna');
+    cargarGeoJSONCorregido('cuencaYNORTE.geojson',  estiloCuenca, 'Cuenca del río Yaque del Norte');
+    cargarGeoJSONCorregido('cauceYNORTE.geojson',   estiloCauce,  'Cauce del río Yaque del Norte');
+    cargarGeoJSONCorregido('cuencaBACUI.geojson',   estiloCuenca, 'Cuenca del río Bacuí');
+    cargarGeoJSONCorregido('cauceBACUI.geojson',    estiloCauce,  'Cauce del río Bacuí');
+    cargarGeoJSONCorregido('cuencaBAJABONICO.geojson', estiloCuenca, 'Cuenca del río Bajabonico');
+    cargarGeoJSONCorregido('cauceBAJABONICO.geojson',  estiloCauce,  'Cauce del río Bajabonico');
+    cargarGeoJSONCorregido('cuencaBOBA.geojson',    estiloCuenca, 'Cuenca del río Boba');
+    cargarGeoJSONCorregido('cauceBOBA.geojson',     estiloCauce,  'Cauce del río Boba');
+    cargarGeoJSONCorregido('cuencaELLIMON.geojson', estiloCuenca, 'Cuenca del río El Limón');
+    cargarGeoJSONCorregido('cauceELLIMON.geojson',  estiloCauce,  'Cauce del río El Limón');
+    cargarGeoJSONCorregido('cuencaJOBA.geojson',    estiloCuenca, 'Cuenca del río Joba');
+    cargarGeoJSONCorregido('cauceJOBA.geojson',     estiloCauce,  'Cauce del río Joba');
+    cargarGeoJSONCorregido('cuencaMAIMONCIBAO.geojson', estiloCuenca, 'Cuenca del río Maimón Cibao');
+    cargarGeoJSONCorregido('cauceMAIMONCIBAO.geojson',  estiloCauce,  'Cauce del río Maimón Cibao');
+    cargarGeoJSONCorregido('cuencaNAGUA.geojson',   estiloCuenca, 'Cuenca del río Nagua');
+    cargarGeoJSONCorregido('cauceNAGUA.geojson',    estiloCauce,  'Cauce del río Nagua');
+    cargarGeoJSONCorregido('cuencaSJUANCIBAO.geojson', estiloCuenca, 'Cuenca del río San Juan Cibao');
+    cargarGeoJSONCorregido('cauceSJUANCIBAO.geojson',  estiloCauce,  'Cauce del río San Juan Cibao');
+    cargarGeoJSONCorregido('cuencaYASICA.geojson',  estiloCuenca, 'Cuenca del río Yásica');
+    cargarGeoJSONCorregido('cauceYASICA.geojson',   estiloCauce,  'Cauce del río Yásica');
+    cargarGeoJSONCorregido('cuencaCAMU.json',       estiloCuenca, 'Cuenca del río Camú');
+    cargarGeoJSONCorregido('cauceCAMU.json',        estiloCauce,  'Cauce del río Camú');
+    cargarGeoJSONCorregido('cuencaMASACRE.json',    estiloCuenca, 'Cuenca del río Dajabón o Masacre');
+    cargarGeoJSONCorregido('cauceMASACRE.json',     estiloCauce,  'Cauce del río Dajabón o Masacre');
+    cargarGeoJSONCorregido('cuencaCHACUEY.json',    estiloCuenca, 'Cuenca del río Chacuey');
+    cargarGeoJSONCorregido('cauceCHACUEY.json',     estiloCauce,  'Cauce del río Chacuey');
+    cargarGeoJSONCorregido('cuencaHAINA.json',      estiloCuenca, 'Cuenca del río Haina');
+    cargarGeoJSONCorregido('cauceHAINA.json',       estiloCauce,  'Cauce del río Haina');
+    cargarGeoJSONCorregido('cuencaNIGUA.json',      estiloCuenca, 'Cuenca del río Nigua');
+    cargarGeoJSONCorregido('cauceNIGUA.json',       estiloCauce,  'Cauce del río Nigua');
+    cargarGeoJSONCorregido('cuencaNIZAO.json',      estiloCuenca, 'Cuenca del río Nizao');
+    cargarGeoJSONCorregido('cauceNIZAO.json',       estiloCauce,  'Cauce del río Nizao');
+    cargarGeoJSONCorregido('cuencaOCOA.json',       estiloCuenca, 'Cuenca del río Ocoa');
+    cargarGeoJSONCorregido('cauceOCOA.json',        estiloCauce,  'Cauce del río Ocoa');
+    cargarGeoJSONCorregido('cuencaJURA.json',       estiloCuenca, 'Cuenca del río Jura');
+    cargarGeoJSONCorregido('cauceJURA.json',        estiloCauce,  'Cauce del río Jura');
+    cargarGeoJSONCorregido('cuencaTABARA.json',     estiloCuenca, 'Cuenca del río Tábara');
+    cargarGeoJSONCorregido('cauceTABARA.json',      estiloCauce,  'Cauce del río Tábara');
+    cargarGeoJSONCorregido('cuencaYSUR.json',       estiloCuenca, 'Cuenca del río Yaque del Sur');
+    cargarGeoJSONCorregido('cauceYSUR.json',        estiloCauce,  'Cauce del río Yaque del Sur');
+    cargarGeoJSONCorregido('cuencaNIZAITO.json',    estiloCuenca, 'Cuenca del río Nizaito');
+    cargarGeoJSONCorregido('cauceNIZAITO.json',     estiloCauce,  'Cauce del río Nizaito');
+    cargarGeoJSONCorregido('cuencaPEDERNALES.json', estiloCuenca, 'Cuenca del río Pedernales');
+    cargarGeoJSONCorregido('caucePEDERNALES.json',  estiloCauce,  'Cauce del río Pedernales');
+    cargarGeoJSONCorregido('cuencaVIA.json',        estiloCuenca, 'Cuenca del río Vía');
+    cargarGeoJSONCorregido('cauceVIA.json',         estiloCauce,  'Cauce del río Vía');
+    cargarGeoJSONCorregido('cuencaBANI.json',       estiloCuenca, 'Cuenca del río Baní / Banilejo');
+    cargarGeoJSONCorregido('cauceBANI.json',        estiloCauce,  'Cauce del río Baní / Banilejo');
+    cargarGeoJSONCorregido('cuencaARTIBONITO.json', estiloCuenca, 'Cuenca del río Artibonito');
+    cargarGeoJSONCorregido('cauceARTIBONITO.json',  estiloCauce,  'Cauce del río Artibonito');
+</script>
+</body>
+</html>
