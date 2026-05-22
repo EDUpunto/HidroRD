@@ -2,34 +2,317 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Hidrografía RD</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        #map { height: 100vh; width: 100%; }
-        .header-info {
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+            background: #1a2635;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* ── HEADER ── */
+        .header-panel {
             position: absolute;
-            top: 10px;
+            top: 12px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.96);
+            padding: 10px 20px 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 3px 16px rgba(0,0,0,0.25);
             text-align: center;
+            min-width: 260px;
+            max-width: 90vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-panel h1 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .header-panel .subtitle {
+            font-size: 0.75rem;
+            color: #4a6080;
+            letter-spacing: 0.02em;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 13px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+            white-space: nowrap;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .btn-primary {
+            background: #1a6bb5;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(26,107,181,0.3);
+        }
+        .btn-primary:hover {
+            background: #155a9a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(26,107,181,0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f4f8;
+            color: #1a3a5c;
+            border: 1px solid #ccd8e8;
+        }
+        .btn-secondary:hover {
+            background: #dde6f0;
+            transform: translateY(-1px);
+        }
+
+        /* ── VISTA / LAYER SWITCHER ── */
+        .view-switcher {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .view-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 13px;
+            border-radius: 22px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            font-family: 'Source Sans 3', sans-serif;
+            cursor: pointer;
+            border: none;
+            transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+            white-space: nowrap;
+        }
+
+        .view-btn.active {
+            background: #1a6bb5;
+            color: #fff;
+        }
+
+        .view-btn:not(.active) {
+            background: rgba(255,255,255,0.92);
+            color: #1a3a5c;
+        }
+
+        .view-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* ── LEYENDA ── */
+        .legend-panel {
+            position: absolute;
+            bottom: 38px;
+            right: 14px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            border-radius: 14px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.22);
+            padding: 12px 16px;
+            min-width: 190px;
+        }
+
+        .legend-title {
+            font-family: 'Merriweather', serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            margin-bottom: 9px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #dde6f0;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 7px;
+            font-size: 0.78rem;
+            color: #2d4a6b;
+            font-weight: 600;
+        }
+
+        .legend-swatch-fill {
+            width: 26px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid rgba(46, 204, 113, 0.7);
+            background: rgba(46, 204, 113, 0.22);
+            flex-shrink: 0;
+        }
+
+        .legend-swatch-line {
+            width: 26px;
+            height: 4px;
+            border-radius: 3px;
+            background: #2980b9;
+            flex-shrink: 0;
+        }
+
+        /* ── PANEL DE CUENCA SELECCIONADA ── */
+        .info-panel {
+            position: absolute;
+            bottom: 38px;
+            left: 14px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            border-radius: 14px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.22);
+            padding: 11px 15px;
+            min-width: 200px;
+            max-width: 260px;
+            display: none;
+        }
+
+        .info-panel.visible {
+            display: block;
+        }
+
+        .info-panel .info-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #7a95b5;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+        }
+
+        .info-panel .info-name {
+            font-family: 'Merriweather', serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            line-height: 1.3;
+        }
+
+        .info-panel .info-reset {
+            margin-top: 8px;
+            font-size: 0.72rem;
+            color: #1a6bb5;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+        .info-panel .info-reset:hover { text-decoration: underline; }
+
+        /* Leaflet scale override */
+        .leaflet-control-scale-line {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 2px solid #1a3a5c;
+            border-top: none;
+            color: #1a3a5c;
+            background: rgba(255,255,255,0.88);
+            padding: 1px 6px;
+        }
+
+        .leaflet-control-attribution {
+            font-size: 0.65rem;
+            border-radius: 8px 0 0 0;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 540px) {
+            .header-panel h1 { font-size: 0.92rem; }
+            .view-switcher { top: auto; bottom: 90px; right: 8px; }
+            .legend-panel { bottom: 48px; right: 8px; padding: 9px 12px; min-width: 160px; }
+            .info-panel { left: 8px; bottom: 48px; max-width: 55vw; }
         }
     </style>
 </head>
 <body>
-    <div class="header-info">
-        <h2 style="margin:0; font-size: 1.2rem;">República Dominicana</h2>
-        <small>🏞️ Ríos superficiales</small>
+
+<!-- HEADER -->
+<div class="header-panel">
+    <h1>🗺️ Hidrografía de RD</h1>
+    <div class="subtitle">🏞️ Cuencas y ríos superficiales</div>
+    <div class="header-buttons">
+        <a class="btn btn-primary" href="https://edupunto.com" target="_blank">🌐 EDUpunto</a>
+        <a class="btn btn-secondary" href="https://drive.google.com" target="_blank">🗒️ Imprimible</a>
     </div>
-    <div id="map"></div>
-    
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="accionLFL.js"></script>
+</div>
+
+<!-- VISTA SWITCHER -->
+<div class="view-switcher">
+    <button class="view-btn active" id="btn-dibujo" onclick="setView('dibujo')">
+        🗺️ Dibujo
+    </button>
+    <button class="view-btn" id="btn-satelite" onclick="setView('satelite')">
+        🛰️ Satélite
+    </button>
+</div>
+
+<!-- INFO PANEL (cuenca seleccionada) -->
+<div class="info-panel" id="infoPanel">
+    <div class="info-label">✨ Cuenca seleccionada</div>
+    <div class="info-name" id="infoName">—</div>
+    <div class="info-reset" onclick="resetSeleccion()">✕ Mostrar todas</div>
+</div>
+
+<!-- MAPA -->
+<div id="map"></div>
+
+<!-- LEYENDA -->
+<div class="legend-panel">
+    <div class="legend-title">Leyenda</div>
+    <div class="legend-item">
+        <div class="legend-swatch-fill"></div>
+        Cuenca hidrográfica
+    </div>
+    <div class="legend-item">
+        <div class="legend-swatch-line"></div>
+        Cauce del río
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="accionLFL.js"></script>
 </body>
 </html>
