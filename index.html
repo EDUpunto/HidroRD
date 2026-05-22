@@ -10,160 +10,189 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
+        body, html {
+            height: 100%;
+            width: 100%;
             font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
             background: #1a2635;
+            overflow: hidden; /* Evitar scrollbars */
         }
 
         #map {
+            position: absolute;
+            top: 0;
+            left: 0;
             height: 100vh;
-            width: 100%;
+            width: 100vw;
+            z-index: 1;
         }
 
-        /* ── HEADER ── */
+        /* ── HEADER (TÍTULO - SIN BOTONES) ── */
         .header-panel {
             position: absolute;
             top: 12px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.96);
-            padding: 10px 20px 10px 20px;
+            background: #242321;
+            padding: 10px 24px;
             border-radius: 30px;
-            box-shadow: 0 3px 16px rgba(0,0,0,0.25);
+            box-shadow: 0 3px 16px rgba(0,0,0,0.5);
             text-align: center;
             min-width: 260px;
             max-width: 90vw;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
+            border: 1px solid #3a3937;
         }
 
         .header-panel h1 {
             font-family: 'Merriweather', Georgia, serif;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #1a3a5c;
+            color: #ffffff;
             line-height: 1.2;
             white-space: nowrap;
         }
 
         .header-panel .subtitle {
-            font-size: 0.75rem;
-            color: #4a6080;
+            font-size: 0.8rem;
+            color: #a0aab5;
             letter-spacing: 0.02em;
         }
 
-        .header-buttons {
+        /* ── BOTONES INFERIORES IZQUIERDOS (DISCRETOS) ── */
+        .bottom-left-controls {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            z-index: 1000;
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
-        .btn {
+        .btn-discreet {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            padding: 5px 13px;
-            border-radius: 20px;
-            font-size: 0.76rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: 600;
             text-decoration: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #242321;
+            border: 1px solid #ccc;
             cursor: pointer;
-            transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+            transition: background 0.2s, opacity 0.2s;
             white-space: nowrap;
             font-family: 'Source Sans 3', sans-serif;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .btn-primary {
-            background: #1a6bb5;
-            color: #fff;
-            box-shadow: 0 2px 6px rgba(26,107,181,0.3);
-        }
-        .btn-primary:hover {
-            background: #155a9a;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(26,107,181,0.4);
+        .btn-discreet:hover {
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
-        .btn-secondary {
-            background: #f0f4f8;
-            color: #1a3a5c;
-            border: 1px solid #ccd8e8;
-        }
-        .btn-secondary:hover {
-            background: #dde6f0;
-            transform: translateY(-1px);
-        }
-
-        /* ── VISTA / LAYER SWITCHER ── */
-        .view-switcher {
+        /* ── DESPLEGABLE VISTA MAPA ── */
+        .dropdown-map-view {
             position: absolute;
             top: 12px;
             right: 14px;
             z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
         }
 
-        .view-btn {
+        .dropbtn {
+            background: #242321;
+            color: white;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            font-family: 'Source Sans 3', sans-serif;
             display: flex;
             align-items: center;
-            gap: 7px;
-            padding: 7px 13px;
-            border-radius: 22px;
-            font-size: 0.76rem;
-            font-weight: 600;
-            font-family: 'Source Sans 3', sans-serif;
-            cursor: pointer;
+            gap: 6px;
+        }
+        
+        .dropbtn:hover {
+            background: #333230;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #242321;
+            min-width: 130px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 5px;
+            border: 1px solid #444;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-content button {
+            color: #ffffff;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
             border: none;
-            transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-            white-space: nowrap;
+            background: none;
+            cursor: pointer;
+            font-family: 'Source Sans 3', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: background 0.2s;
         }
 
-        .view-btn.active {
-            background: #1a6bb5;
-            color: #fff;
+        .dropdown-content button:hover {
+            background-color: #333230;
+        }
+        
+        .dropdown-content button.active {
+            background-color: #444340;
+            border-left: 3px solid #3498db;
         }
 
-        .view-btn:not(.active) {
-            background: rgba(255,255,255,0.92);
-            color: #1a3a5c;
-        }
-
-        .view-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        /* ── LEYENDA ── */
+        /* ── LEYENDA (SIMBOLOGÍA SIEMPRE VISIBLE) ── */
         .legend-panel {
             position: absolute;
-            bottom: 38px;
+            bottom: 50px; 
             right: 14px;
             z-index: 1000;
-            background: rgba(255,255,255,0.95);
-            border-radius: 14px;
-            box-shadow: 0 3px 14px rgba(0,0,0,0.22);
+            background: #242321;
+            color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.4);
             padding: 12px 16px;
-            min-width: 190px;
+            min-width: 150px;
+            border: 1px solid #3a3937;
         }
 
         .legend-title {
             font-family: 'Merriweather', serif;
             font-size: 0.78rem;
             font-weight: 700;
-            color: #1a3a5c;
             margin-bottom: 9px;
             padding-bottom: 6px;
-            border-bottom: 1px solid #dde6f0;
+            border-bottom: 1px solid #444;
             letter-spacing: 0.04em;
             text-transform: uppercase;
+            color: #a0aab5;
         }
 
         .legend-item {
@@ -172,36 +201,35 @@
             gap: 9px;
             margin-bottom: 7px;
             font-size: 0.78rem;
-            color: #2d4a6b;
             font-weight: 600;
         }
 
         .legend-swatch-fill {
-            width: 26px;
-            height: 16px;
-            border-radius: 4px;
+            width: 24px;
+            height: 14px;
+            border-radius: 3px;
             border: 2px solid rgba(46, 204, 113, 0.7);
-            background: rgba(46, 204, 113, 0.22);
+            background: rgba(46, 204, 113, 0.4);
             flex-shrink: 0;
         }
 
         .legend-swatch-line {
-            width: 26px;
+            width: 24px;
             height: 4px;
-            border-radius: 3px;
-            background: #2980b9;
+            border-radius: 2px;
+            background: #3498db;
             flex-shrink: 0;
         }
 
         /* ── PANEL DE CUENCA SELECCIONADA ── */
         .info-panel {
             position: absolute;
-            bottom: 38px;
+            bottom: 65px;
             left: 14px;
             z-index: 1000;
             background: rgba(255,255,255,0.95);
-            border-radius: 14px;
-            box-shadow: 0 3px 14px rgba(0,0,0,0.22);
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.3);
             padding: 11px 15px;
             min-width: 200px;
             max-width: 260px;
@@ -241,65 +269,79 @@
         }
         .info-panel .info-reset:hover { text-decoration: underline; }
 
-        /* Leaflet scale override */
+        /* ── CONTROLES LEAFLET PERSONALIZADOS (ZOOM Y ESCALA) ── */
+        .leaflet-bar a, .leaflet-bar a:hover {
+            background-color: #242321 !important;
+            color: #ffffff !important;
+            border-bottom: 1px solid #444 !important;
+        }
+        .leaflet-bar {
+            border: 1px solid #444 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+        }
+        
         .leaflet-control-scale-line {
             font-family: 'Source Sans 3', sans-serif;
             font-size: 0.7rem;
             font-weight: 600;
-            border: 2px solid #1a3a5c;
-            border-top: none;
-            color: #1a3a5c;
-            background: rgba(255,255,255,0.88);
-            padding: 1px 6px;
+            border: 2px solid #ffffff !important;
+            border-top: none !important;
+            color: #ffffff !important;
+            background: #242321 !important;
+            padding: 2px 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
 
         .leaflet-control-attribution {
             font-size: 0.65rem;
-            border-radius: 8px 0 0 0;
+            background: rgba(255,255,255,0.7) !important;
         }
 
-        /* Mobile adjustments */
+        /* Ajustes Móvil */
         @media (max-width: 540px) {
             .header-panel h1 { font-size: 0.92rem; }
-            .view-switcher { top: auto; bottom: 90px; right: 8px; }
-            .legend-panel { bottom: 48px; right: 8px; padding: 9px 12px; min-width: 160px; }
-            .info-panel { left: 8px; bottom: 48px; max-width: 55vw; }
+            .legend-panel { bottom: 45px; right: 8px; padding: 9px 12px; min-width: 130px; }
+            .bottom-left-controls { bottom: 8px; left: 8px; gap: 4px; }
+            .btn-discreet { padding: 5px 8px; font-size: 0.7rem; }
+            .info-panel { left: 8px; bottom: 85px; max-width: 55vw; }
         }
     </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- MAPA CONTENEDOR (Fondo) -->
+<div id="map"></div>
+
+<!-- HEADER (Sin botones internos) -->
 <div class="header-panel">
     <h1>🗺️ Hidrografía de RD</h1>
     <div class="subtitle">🏞️ Cuencas y ríos superficiales</div>
-    <div class="header-buttons">
-        <a class="btn btn-primary" href="https://edupunto.com" target="_blank">🌐 EDUpunto</a>
-        <a class="btn btn-secondary" href="https://drive.google.com" target="_blank">🗒️ Imprimible</a>
+</div>
+
+<!-- DESPLEGABLE VISTA MAPA -->
+<div class="dropdown-map-view" id="vista-mapa-control">
+    <button class="dropbtn" onclick="toggleDropdown()">👁️ Vista Mapa ▼</button>
+    <div class="dropdown-content" id="map-dropdown">
+        <button id="btn-dibujo" class="active" onclick="setView('dibujo')">🗺️ Dibujo</button>
+        <button id="btn-satelite" onclick="setView('satelite')">🛰️ Satélite</button>
     </div>
 </div>
 
-<!-- VISTA SWITCHER -->
-<div class="view-switcher">
-    <button class="view-btn active" id="btn-dibujo" onclick="setView('dibujo')">
-        🗺️ Dibujo
-    </button>
-    <button class="view-btn" id="btn-satelite" onclick="setView('satelite')">
-        🛰️ Satélite
-    </button>
-</div>
-
-<!-- INFO PANEL (cuenca seleccionada) -->
+<!-- INFO PANEL (Cuenca seleccionada) -->
 <div class="info-panel" id="infoPanel">
     <div class="info-label">✨ Cuenca seleccionada</div>
     <div class="info-name" id="infoName">—</div>
     <div class="info-reset" onclick="resetSeleccion()">✕ Mostrar todas</div>
 </div>
 
-<!-- MAPA -->
-<div id="map"></div>
+<!-- BOTONES INFERIORES IZQUIERDOS (Separados y discretos) -->
+<div class="bottom-left-controls">
+    <a class="btn-discreet" href="https://edupunto.com/2022/01/rios-importantes-de-dominicana/" target="_blank">🌐 EDUpunto</a>
+    <a class="btn-discreet" href="https://drive.google.com" target="_blank">🗒️ Imprimible</a>
+    <a class="btn-discreet" href="https://drive.google.com/file/d/1XTaj_FNC1Jfv1jy0aXndX0d-4eRTDLng/view?usp=sharing" target="_blank">💧 Cuenca Hidro</a>
+</div>
 
-<!-- LEYENDA -->
+<!-- LEYENDA (Panel separado siempre visible) -->
 <div class="legend-panel">
     <div class="legend-title">Leyenda</div>
     <div class="legend-item">
